@@ -1,0 +1,2336 @@
+SMS — STUDENT MANAGEMENT SYSTEM
+MASTER DEVELOPMENT PROMPT / FULL PRD
+Version: 1.0
+
+============================================================
+1. PROJECT OVERVIEW
+============================================================
+
+Build a production-ready Scholarship-focused Student Management System named:
+
+SMS — Student Management System
+
+Technology constraints:
+- Frontend: HTML5, CSS3, Vanilla JavaScript only.
+- Backend: Supabase.
+- Database: PostgreSQL through Supabase.
+- Authentication: Supabase Auth.
+- No React.
+- No Vue.
+- No Angular.
+- No TypeScript.
+- No unnecessary framework.
+- Use a small number of reliable CDN libraries only when genuinely needed.
+- Charts may use a lightweight chart library such as Chart.js via CDN.
+- The application must work on Android phones, iPhones, tablets, laptops and desktop screens.
+- The UI must never create horizontal overflow on normal screen sizes.
+- The code must be modular, readable, maintainable and free of duplicate logic.
+
+The system is primarily an ADMIN scholarship management application.
+
+There is NO normal student login.
+
+Students receive a secure shareable link/token that lets them view their own scholarship/application information in a read-only public/student view.
+
+IMPORTANT:
+Do not expose Supabase service-role keys in frontend code.
+Only use the Supabase anon/public key in the browser.
+All sensitive database access must be protected by authentication and Row Level Security (RLS).
+
+============================================================
+2. CORE BUSINESS PURPOSE
+============================================================
+
+The administrator should be able to:
+
+1. Create and manage many scholarships.
+2. Store scholarship name, description, eligibility, required documents, deadline, benefit amount and other useful information.
+3. Define scholarship-specific application statuses/options.
+4. Create and manage student records.
+5. Select a scholarship for a student.
+6. Find suitable scholarships using a smart eligibility filter.
+7. Manually assign any scholarship when needed.
+8. Record application ID, portal/application URL, username/user ID and password/credential information if required.
+9. Record application date.
+10. Track current application status.
+11. Record scholarship benefit/amount.
+12. Configure commission percentage.
+13. Automatically calculate commission amount.
+14. Allow entering commission amount/percentage with automatic reverse calculation where appropriate.
+15. Record payments.
+16. Track payment status and payment history.
+17. Create a shareable student link.
+18. Allow the student to view relevant information through that link without normal login.
+19. Maintain an Important Links section.
+20. Display dashboard statistics.
+21. Display a scholarship/application status pie chart.
+22. Search, filter, sort and manage records easily.
+23. Keep the interface simple rather than over-complicated.
+
+============================================================
+3. DESIGN PRINCIPLES
+============================================================
+
+The application must feel modern, clean, professional and fast.
+
+Design goals:
+- Premium admin dashboard feel.
+- Simple navigation.
+- Strong visual hierarchy.
+- Excellent spacing.
+- Clear typography.
+- Attractive cards.
+- Smooth but subtle animations.
+- Interactive buttons.
+- Clear hover/focus/active/disabled/loading states.
+- Toast notifications.
+- Confirmation dialogs for destructive actions.
+- Empty states.
+- Skeleton/loading states where useful.
+- Error states.
+- Success states.
+- Accessible forms.
+- Keyboard-friendly controls.
+- Mobile-first responsive design.
+
+Do not make the application visually overloaded.
+
+Avoid:
+- excessive gradients
+- excessive animations
+- huge cards
+- tiny text
+- overcrowded tables
+- unnecessary popups
+- complicated multi-step workflows unless genuinely required
+
+============================================================
+4. RESPONSIVE REQUIREMENTS
+============================================================
+
+The application MUST be responsive across:
+
+- 320px+ mobile
+- 375px mobile
+- 390px mobile
+- 430px mobile
+- 768px tablet
+- 1024px tablet/small laptop
+- 1280px desktop
+- 1440px desktop
+- large desktop screens
+
+Rules:
+- No page-level horizontal scrolling.
+- No buttons overflowing cards.
+- Forms must stack naturally on mobile.
+- Tables must transform into a mobile-friendly layout.
+- Sidebar becomes a drawer on mobile.
+- Header controls wrap or collapse.
+- Modals must fit within viewport.
+- Charts must resize automatically.
+- Long names/URLs must wrap safely.
+- Cards should use responsive CSS grid.
+- Use CSS clamp(), minmax(), flex-wrap and grid appropriately.
+- Never use fixed widths that cause overflow.
+- Use max-width containers.
+- Use 100% width where appropriate.
+- Ensure touch targets are comfortably tappable.
+- Do not rely on hover for important functionality.
+
+============================================================
+5. RECOMMENDED FOLDER STRUCTURE
+============================================================
+
+sms/
+│
+├── index.html
+├── admin.html
+├── scholarships.html
+├── scholarship-details.html
+├── students.html
+├── student-details.html
+├── applications.html
+├── payments.html
+├── important-links.html
+├── shared.html
+├── settings.html
+├── 404.html
+│
+├── assets/
+│   ├── css/
+│   │   ├── reset.css
+│   │   ├── variables.css
+│   │   ├── base.css
+│   │   ├── layout.css
+│   │   ├── components.css
+│   │   ├── forms.css
+│   │   ├── tables.css
+│   │   ├── responsive.css
+│   │   └── pages.css
+│   │
+│   ├── js/
+│   │   ├── config.js
+│   │   ├── supabase.js
+│   │   ├── auth.js
+│   │   ├── router.js
+│   │   ├── utils.js
+│   │   ├── validation.js
+│   │   ├── toast.js
+│   │   ├── modal.js
+│   │   ├── ui.js
+│   │   ├── dashboard.js
+│   │   ├── scholarships.js
+│   │   ├── scholarship-details.js
+│   │   ├── students.js
+│   │   ├── student-details.js
+│   │   ├── applications.js
+│   │   ├── payments.js
+│   │   ├── important-links.js
+│   │   ├── shared.js
+│   │   └── settings.js
+│   │
+│   └── icons/
+│
+├── supabase/
+│   ├── schema.sql
+│   ├── rls.sql
+│   ├── seed.sql
+│   └── functions/
+│       └── create-share-token/
+│
+├── README.md
+└── SETUP.md
+
+If the coding platform prefers a single-page architecture, it may combine pages, but functionality must remain modular. Do not sacrifice maintainability.
+
+============================================================
+6. APPLICATION ROUTES / PAGES
+============================================================
+
+ADMIN PAGES:
+
+1. Login
+2. Dashboard
+3. Scholarships
+4. Scholarship Details
+5. Students
+6. Student Details
+7. Applications
+8. Payments
+9. Important Links
+10. Settings
+
+PUBLIC/SHARED PAGE:
+
+11. Shared Student View
+
+============================================================
+7. LOGIN PAGE
+============================================================
+
+Only administrators can log in.
+
+Fields:
+- Email
+- Password
+
+Buttons:
+- Login
+- Show/Hide Password
+
+Login button states:
+- Normal: "Login"
+- Loading: spinner + "Signing in..."
+- Success: redirect to dashboard
+- Error: show clear message
+
+Error messages must be user-friendly.
+
+Examples:
+- "Invalid email or password."
+- "Please enter your email."
+- "Please enter your password."
+- "Your session has expired. Please sign in again."
+
+Do not expose raw database errors to the user.
+
+After successful login:
+- Save/authenticate session through Supabase Auth.
+- Redirect to admin dashboard.
+
+If an unauthenticated user opens an admin page:
+- Redirect to login.
+
+Logout:
+- Confirmation optional.
+- Sign out through Supabase.
+- Redirect to login.
+
+============================================================
+8. ADMIN LAYOUT
+============================================================
+
+Desktop:
+- Left sidebar.
+- Top header.
+- Main content area.
+
+Sidebar items:
+- Dashboard
+- Scholarships
+- Students
+- Applications
+- Payments
+- Important Links
+- Settings
+- Logout
+
+Sidebar behavior:
+- Active item highlighted.
+- Icons + labels.
+- Collapsible on desktop if desired.
+- Drawer on mobile.
+- Close drawer after navigation on mobile.
+
+Top header:
+- Page title.
+- Search where relevant.
+- Notification/status area if implemented.
+- Admin profile/menu.
+- Mobile menu button.
+
+============================================================
+9. DASHBOARD
+============================================================
+
+Dashboard should give an instant overview.
+
+Statistics cards:
+
+1. Total Students
+2. Total Scholarships
+3. Total Applications
+4. Active Applications
+5. Approved/Completed Applications
+6. Total Scholarship Amount
+7. Total Commission
+8. Pending Payments
+
+Cards:
+- Clear icon.
+- Large number.
+- Small descriptive label.
+- Optional trend/secondary information.
+- Skeleton loading state.
+- Clickable cards may navigate to filtered pages.
+
+Charts:
+
+A. Application Status Pie/Doughnut Chart
+
+Example status categories:
+- Not Started
+- Applied
+- Screening
+- Screening Completed
+- Documents Pending
+- Under Verification
+- Approved
+- Rejected
+- Disbursed
+- On Hold
+- Other
+
+IMPORTANT:
+These statuses should not be hard-coded as the only possible statuses. The admin must be able to configure statuses.
+
+Chart:
+- Dynamically generated from database.
+- Clicking a segment can open the Applications page filtered by that status.
+- Responsive.
+- Show legend.
+- Show empty-state message when no application data exists.
+
+B. Optional second chart:
+- Monthly applications.
+Keep it only if it improves usability.
+
+Recent activity:
+- Recently added students.
+- Recently created applications.
+- Recent payments.
+
+Quick actions:
+- Add Student
+- Add Scholarship
+- Add Application
+- Record Payment
+- Add Important Link
+
+============================================================
+10. SCHOLARSHIP MANAGEMENT
+============================================================
+
+The admin may create as many scholarships as practical.
+
+Scholarship list page:
+
+Columns/cards:
+- Scholarship Name
+- Provider/Organization
+- Deadline
+- Benefit Amount
+- Eligibility summary
+- Application count
+- Status
+- Actions
+
+Actions:
+- View
+- Edit
+- Duplicate
+- Delete
+- Assign Student
+
+Search:
+- Scholarship name
+- Provider
+
+Filters:
+- Active/Inactive
+- Deadline
+- Amount range
+- Eligibility category
+- Course/category
+- Custom tags
+
+Sorting:
+- Name
+- Deadline
+- Amount
+- Recently added
+
+Mobile:
+Use cards instead of forcing a large table.
+
+============================================================
+11. ADD/EDIT SCHOLARSHIP FORM
+============================================================
+
+Fields:
+
+Basic:
+- Scholarship Name *
+- Provider/Organization
+- Short Description
+- Full Description
+- Official Scholarship URL
+- Application Portal URL
+
+Deadline:
+- Deadline Date *
+- Optional deadline time
+- Optional "rolling deadline" flag
+
+Financial:
+- Benefit Amount
+- Currency
+- Benefit description
+
+Eligibility:
+- Minimum age
+- Maximum age
+- Gender eligibility if applicable
+- Category
+- State/Location
+- Nationality/residency requirement
+- Course/Program
+- Education level
+- Institution type
+- Minimum percentage/CGPA
+- Income limit
+- Other eligibility conditions
+- Custom eligibility notes
+
+Documents:
+Allow the admin to enter required documents as a list.
+
+Examples:
+- Aadhaar Card
+- Income Certificate
+- Bonafide Certificate
+- Marksheet
+- Bank Passbook
+- Admission Proof
+
+Document fields:
+- Document name
+- Mandatory/Optional
+- Notes
+
+Application statuses:
+When creating/editing a scholarship, the admin can define the statuses available for applications belonging to that scholarship.
+
+Default suggested statuses:
+- Not Started
+- Applied
+- Screening
+- Screening Completed
+- Documents Pending
+- Under Verification
+- Approved
+- Rejected
+- Disbursed
+- On Hold
+- Other
+
+Admin can:
+- Add status
+- Rename status
+- Reorder status
+- Remove status if not currently used
+- Mark one status as default
+
+Do not delete a status that is already used by existing applications without a safe migration/confirmation.
+
+============================================================
+12. SCHOLARSHIP DETAIL PAGE
+============================================================
+
+Display:
+
+- Scholarship name
+- Provider
+- Deadline
+- Description
+- Benefit amount
+- Eligibility
+- Required documents
+- Official link
+- Portal link
+- Application status options
+- Number of assigned students
+- Number of applications
+- Approved count
+- Total expected benefit
+- Total commission
+
+Actions:
+- Edit
+- Delete
+- Assign Student
+- Copy Scholarship Link if implemented
+- Add to Important Links
+
+============================================================
+13. STUDENT MANAGEMENT
+============================================================
+
+Student list:
+
+Fields:
+- Student Name
+- Student ID
+- Phone
+- Email
+- Course
+- Institution
+- Academic level
+- State/city
+- Application count
+- Status summary
+- Share link action
+- Actions
+
+Actions:
+- View
+- Edit
+- Delete
+- Create Share Link
+- Copy Share Link
+- Open Shared View
+- Add Application
+
+Search:
+- Name
+- Student ID
+- Phone
+- Email
+
+Filters:
+- Course
+- Education level
+- Institution
+- State
+- Category
+- Application status
+- Scholarship
+- Eligibility
+
+============================================================
+14. ADD/EDIT STUDENT FORM
+============================================================
+
+Basic information:
+- Full Name *
+- Student ID / Registration Number
+- Date of Birth
+- Gender
+- Phone
+- Email
+- Address
+- City
+- State
+- Pincode
+
+Academic information:
+- Institution
+- Course
+- Specialization
+- Education Level
+- Year/Semester
+- Admission Year
+- Expected Graduation Year
+- Percentage
+- CGPA
+
+Financial/eligibility information:
+- Family income
+- Category
+- Special eligibility notes
+- Other relevant fields
+
+Do not collect unnecessary sensitive data.
+
+Add optional notes.
+
+Validation:
+- Required fields must be marked.
+- Email format validation.
+- Phone validation appropriate for India.
+- Numeric validation for income/percentage/CGPA.
+- Prevent impossible values.
+
+============================================================
+15. STUDENT DETAIL PAGE
+============================================================
+
+Header:
+- Student name
+- Student ID
+- Contact information
+- Edit button
+- Share button
+
+Sections:
+
+A. Profile
+B. Academic Details
+C. Eligibility Information
+D. Scholarship Applications
+E. Payments
+F. Important Links
+G. Share Link
+
+Scholarship application section should show:
+- Scholarship
+- Application ID
+- Application URL
+- Applied date
+- Current status
+- Benefit amount
+- Commission percentage
+- Commission amount
+- Payment status
+- Actions
+
+============================================================
+16. SMART SCHOLARSHIP FILTER
+============================================================
+
+Create a simple smart eligibility engine.
+
+Purpose:
+When admin opens a student's profile and clicks "Find Eligible Scholarships", the system should compare student information against scholarship eligibility fields.
+
+Matching examples:
+- Course matches
+- Education level matches
+- State matches
+- Income is within limit
+- Percentage meets minimum
+- Age meets range
+- Category matches
+- Other configured criteria
+
+Results should show:
+
+"Likely Eligible"
+"Possibly Eligible"
+"Not Eligible"
+
+Each result should show WHY.
+
+Example:
+Scholarship A
+Likely Eligible
+✓ Course matches
+✓ Income within limit
+✓ Minimum percentage met
+✓ State eligible
+
+Scholarship B
+Possibly Eligible
+✓ Course matches
+? Category information missing
+✓ Income within limit
+
+The engine must not claim legal/official eligibility. Label it as a screening/matching tool.
+
+Buttons:
+- Assign Scholarship
+- View Details
+- Ignore
+- Apply Manually
+
+IMPORTANT:
+Admin must always be able to manually assign a scholarship even if the smart filter does not recommend it.
+
+============================================================
+17. APPLICATION MANAGEMENT
+============================================================
+
+An application represents:
+
+Student + Scholarship
+
+Fields:
+
+- Student *
+- Scholarship *
+- Application ID
+- Portal/User ID
+- Portal URL
+- Portal Password
+- Application Date
+- Current Status
+- Benefit Amount
+- Commission %
+- Commission Amount
+- Payment Status
+- Notes
+
+IMPORTANT SECURITY REQUIREMENT:
+Do not store plaintext portal passwords in the database unless there is a genuine business requirement and the user explicitly accepts the risk.
+
+Preferred approach:
+- Store only a secure reference or encrypted secret using an appropriate backend secret-management/encryption mechanism.
+- Never expose stored passwords in the normal student shared view.
+- Never log passwords.
+- Never put passwords in URLs.
+- Never send passwords to analytics/logging systems.
+- If secure secret storage cannot be implemented with the selected architecture, replace password storage with a safer "Credential Notes / Password Stored Elsewhere" field.
+
+============================================================
+18. APPLICATION STATUS
+============================================================
+
+Each application must have a status selected from the scholarship's configured statuses.
+
+Default statuses may include:
+- Not Started
+- Applied
+- Screening
+- Screening Completed
+- Documents Pending
+- Under Verification
+- Approved
+- Rejected
+- Disbursed
+- On Hold
+- Other
+
+Status UI:
+- Colored badge/chip.
+- Clear label.
+- Dropdown in edit mode.
+- Confirmation for major status transitions if desired.
+- Status history should be stored if practical.
+
+Application status changes must update dashboard statistics automatically.
+
+============================================================
+19. COMMISSION SYSTEM
+============================================================
+
+The admin can define commission percentage.
+
+Example:
+Scholarship benefit = ₹12,000
+Commission = 40%
+
+Automatic calculation:
+Commission amount = ₹12,000 × 40 / 100
+Commission amount = ₹4,800
+
+Net amount can optionally be shown:
+₹12,000 − ₹4,800 = ₹7,200
+
+Support two input modes:
+
+MODE A:
+Admin enters benefit amount + commission percentage.
+System calculates commission amount automatically.
+
+MODE B:
+Admin enters benefit amount + commission amount.
+System calculates commission percentage automatically.
+
+If both percentage and amount are edited:
+- Use an explicit calculation mode selector.
+- Never silently overwrite user input.
+- Show which value is being calculated.
+
+Validation:
+- Commission percentage: 0–100.
+- Amount cannot be negative.
+- Currency-safe calculation.
+- Store monetary values as numeric/decimal, not floating-point text.
+
+Display:
+- Benefit Amount
+- Commission %
+- Commission Amount
+- Net Amount
+
+============================================================
+20. PAYMENT MANAGEMENT
+============================================================
+
+Payments must be records, not just a single boolean.
+
+Payment fields:
+- Student
+- Application
+- Amount
+- Payment date
+- Payment method
+- Reference/Transaction ID
+- Payment status
+- Notes
+
+Payment status:
+- Pending
+- Partial
+- Paid
+- Failed
+- Refunded
+- Other
+
+Payment method examples:
+- Cash
+- Bank Transfer
+- UPI
+- Other
+
+Actions:
+- Record Payment
+- Edit Payment
+- Delete Payment
+- View Payment History
+
+The application should calculate:
+- Total expected commission
+- Total received
+- Total pending
+- Total paid
+- Outstanding amount
+
+Do not call a payment "completed" merely because an application is approved.
+
+============================================================
+21. IMPORTANT LINKS
+============================================================
+
+Create a dedicated Important Links page.
+
+Each link:
+- Title *
+- URL *
+- Description
+- Category
+- Priority
+- Active/inactive
+
+Examples:
+- Scholarship Portal
+- Government Website
+- Document Portal
+- College Portal
+- Verification Portal
+- Other
+
+Actions:
+- Add
+- Edit
+- Delete
+- Open
+- Copy URL
+
+URL validation:
+- Require http:// or https://.
+- Display external-link indicator.
+- Open external links in a new tab.
+
+============================================================
+22. SHAREABLE STUDENT LINK
+============================================================
+
+Students do not receive normal login credentials.
+
+Admin clicks:
+"Create Share Link"
+
+System creates a secure random token.
+
+Example conceptual URL:
+https://your-domain.com/shared.html?token=RANDOM_SECURE_TOKEN
+
+Requirements:
+- Token must be cryptographically random.
+- Token must not contain student ID or personal information.
+- Token should have an expiration option.
+- Admin can revoke a token.
+- Admin can generate a new token.
+- Old token can be invalidated when requested.
+- Do not use sequential IDs.
+- Do not put database IDs directly into the public URL when avoidable.
+
+Shared page should display only approved/safe information.
+
+Shared student view:
+- Student name
+- Student ID if admin chooses to expose it
+- Academic information selected for sharing
+- Scholarship name
+- Scholarship provider
+- Application ID if enabled
+- Application date
+- Current status
+- Benefit amount if enabled
+- Commission information only if explicitly configured for student visibility
+- Important links
+- Notes that are marked shareable
+
+NEVER show:
+- Admin login details
+- Supabase keys
+- Internal database IDs
+- Private admin notes
+- Portal passwords
+- Sensitive credentials
+- RLS/security metadata
+
+Provide:
+- "Last Updated"
+- Clean printable view
+- Mobile-friendly design
+
+Optional:
+- "Download/Print" using browser print functionality.
+
+============================================================
+23. SHARING CONTROLS
+============================================================
+
+Admin should be able to control what is visible in the shared view.
+
+Possible toggles:
+- Show student ID
+- Show phone
+- Show email
+- Show academic details
+- Show application ID
+- Show benefit amount
+- Show commission
+- Show payment status
+- Show notes
+- Show important links
+
+Default should be privacy-first.
+
+Do not expose sensitive data by default.
+
+============================================================
+24. DATABASE DESIGN
+============================================================
+
+Use PostgreSQL through Supabase.
+
+Recommended tables:
+
+1. profiles
+2. scholarships
+3. scholarship_statuses
+4. scholarship_documents
+5. students
+6. applications
+7. application_status_history
+8. payments
+9. important_links
+10. share_tokens
+
+Optional:
+11. application_documents
+12. audit_logs
+
+============================================================
+25. PROPOSED DATABASE FIELDS
+============================================================
+
+profiles:
+- id UUID primary key references auth.users(id)
+- full_name
+- email
+- role
+- created_at
+- updated_at
+
+role should support admin.
+
+scholarships:
+- id UUID primary key
+- name
+- provider
+- short_description
+- description
+- official_url
+- portal_url
+- deadline_date
+- deadline_time nullable
+- rolling_deadline boolean
+- benefit_amount numeric
+- currency
+- eligibility JSONB or normalized fields
+- active boolean
+- created_at
+- updated_at
+
+scholarship_statuses:
+- id UUID primary key
+- scholarship_id UUID foreign key
+- name
+- sort_order
+- is_default
+- active
+- created_at
+- updated_at
+
+scholarship_documents:
+- id UUID primary key
+- scholarship_id UUID foreign key
+- document_name
+- required boolean
+- notes
+- sort_order
+- created_at
+
+students:
+- id UUID primary key
+- student_code
+- full_name
+- date_of_birth
+- gender
+- phone
+- email
+- address
+- city
+- state
+- pincode
+- institution
+- course
+- specialization
+- education_level
+- academic_year
+- admission_year
+- graduation_year
+- percentage
+- cgpa
+- family_income
+- category
+- eligibility_notes
+- internal_notes
+- created_at
+- updated_at
+
+applications:
+- id UUID primary key
+- student_id UUID foreign key
+- scholarship_id UUID foreign key
+- application_id
+- portal_user_id
+- portal_url
+- credential_reference nullable
+- application_date
+- status_id UUID foreign key
+- benefit_amount numeric
+- commission_percentage numeric
+- commission_amount numeric
+- net_amount numeric
+- payment_status
+- notes
+- share_application_id boolean
+- share_benefit_amount boolean
+- share_commission boolean
+- share_payment_status boolean
+- created_at
+- updated_at
+
+application_status_history:
+- id UUID primary key
+- application_id UUID
+- old_status_id
+- new_status_id
+- changed_by UUID
+- changed_at
+- note
+
+payments:
+- id UUID primary key
+- application_id UUID
+- student_id UUID
+- amount numeric
+- payment_date
+- payment_method
+- transaction_reference
+- status
+- notes
+- created_at
+- updated_at
+
+important_links:
+- id UUID primary key
+- title
+- url
+- description
+- category
+- priority
+- active
+- created_at
+- updated_at
+
+share_tokens:
+- id UUID primary key
+- student_id UUID
+- token_hash
+- expires_at
+- revoked_at
+- created_by UUID
+- created_at
+- last_accessed_at
+
+Never store the raw share token if hashing can be used.
+
+============================================================
+26. DATABASE RELATIONSHIPS
+============================================================
+
+One scholarship:
+- has many statuses
+- has many required documents
+- has many applications
+
+One student:
+- has many applications
+- has many payments through applications
+- can have multiple share tokens
+
+One application:
+- belongs to one student
+- belongs to one scholarship
+- has one current status
+- has many status-history records
+- has many payments
+
+============================================================
+27. RLS / SECURITY
+============================================================
+
+Enable Row Level Security on all application tables.
+
+Admin access:
+- authenticated users with role=admin can read/write admin data.
+
+Do not rely only on frontend route protection.
+
+Use PostgreSQL RLS policies.
+
+Public shared view:
+- Do NOT simply create a policy allowing anonymous users to SELECT the entire students table.
+- Public access should go through a narrow, secure mechanism.
+- Prefer a Supabase Edge Function that:
+  1. Receives the share token.
+  2. Hashes the token.
+  3. Checks validity and expiration.
+  4. Checks revoked_at.
+  5. Returns only explicitly shareable fields.
+  6. Never returns credentials/passwords.
+  7. Does not expose arbitrary student records.
+
+The frontend must never contain a service-role key.
+
+============================================================
+28. SUPABASE AUTH
+============================================================
+
+Use Supabase email/password authentication.
+
+Admin creation:
+- Create the first admin securely through Supabase Auth.
+- Create matching profile row.
+
+Protect all admin routes.
+
+Session handling:
+- Check current session on page load.
+- Listen for auth state changes.
+- Redirect appropriately.
+- Handle expired sessions.
+- Do not store authentication passwords in localStorage manually.
+
+============================================================
+29. FORM UX
+============================================================
+
+All forms must have:
+
+- Clear labels.
+- Required markers.
+- Helpful placeholders.
+- Inline validation.
+- Error messages.
+- Save button.
+- Cancel button.
+- Loading state.
+- Success toast.
+- Failure toast.
+- Unsaved changes warning where useful.
+
+Save button:
+Normal:
+"Save Scholarship"
+
+Loading:
+"Saving..."
+
+Disabled while saving to prevent duplicate submissions.
+
+After success:
+- Close modal or navigate appropriately.
+- Refresh affected data.
+- Update dashboard if necessary.
+
+============================================================
+30. BUTTON DESIGN AND INTERACTIONS
+============================================================
+
+Buttons must look and behave like real application controls.
+
+Primary:
+- Add Scholarship
+- Add Student
+- Save
+- Create Share Link
+
+Secondary:
+- Cancel
+- View
+- Edit
+- Copy
+- Filter
+
+Danger:
+- Delete
+- Revoke Share Link
+
+Button states:
+- Default
+- Hover
+- Focus
+- Active
+- Disabled
+- Loading
+- Success where appropriate
+
+For icon-only buttons:
+- Add tooltip.
+- Add aria-label.
+- Make them large enough for touch.
+
+Delete:
+- Always require confirmation.
+- Show item name.
+- Explain that the action may be permanent.
+- Disable confirm button while processing.
+
+Copy:
+- Copy to clipboard.
+- Show "Copied" state/toast.
+- Restore normal label afterward.
+
+============================================================
+31. MODALS
+============================================================
+
+Use reusable modal component.
+
+Modal requirements:
+- Responsive.
+- Maximum width.
+- Scrollable content.
+- Close button.
+- Escape key closes where safe.
+- Backdrop click behavior should be intentional.
+- Focus management.
+- No modal should exceed viewport height.
+
+Use modals for:
+- Add/Edit
+- Confirmation
+- Share link
+- Record payment
+- Quick application
+
+For large forms, use dedicated pages instead of oversized modals.
+
+============================================================
+32. SEARCH AND FILTER UX
+============================================================
+
+Search should be fast and debounced where appropriate.
+
+Filter panel:
+- Search
+- Status
+- Scholarship
+- Course
+- State
+- Date range
+- Amount range
+
+Provide:
+- Apply
+- Clear filters
+
+Show active filter count.
+
+On mobile:
+- Filter button opens a drawer/modal.
+- Filters should not push the entire page horizontally.
+
+============================================================
+33. TABLE UX
+============================================================
+
+Desktop:
+Use tables for dense data.
+
+Features:
+- Sortable headers.
+- Sticky header if useful.
+- Pagination.
+- Row actions.
+- Status badges.
+
+Mobile:
+Do NOT simply shrink the table until it becomes unreadable.
+
+Instead:
+- Convert rows to cards, OR
+- Use a controlled horizontal table container only for data that genuinely requires a table.
+
+No page-level overflow.
+
+============================================================
+34. PAGINATION
+============================================================
+
+For large datasets:
+- Use server-side pagination where practical.
+- Show page number.
+- Previous/Next.
+- Items per page.
+
+Examples:
+10 / 25 / 50 / 100.
+
+Do not load thousands of records unnecessarily.
+
+============================================================
+35. TOAST NOTIFICATIONS
+============================================================
+
+Create a reusable toast system.
+
+Examples:
+Success:
+"Scholarship created successfully."
+
+Error:
+"Unable to save scholarship. Please try again."
+
+Info:
+"Share link copied."
+
+Warning:
+"This scholarship deadline has passed."
+
+Toast:
+- Auto-dismiss.
+- Manual close.
+- Accessible.
+- Mobile-friendly.
+
+============================================================
+36. DEADLINE HANDLING
+============================================================
+
+Scholarships should visually indicate:
+- Active
+- Deadline approaching
+- Deadline today
+- Expired
+- Rolling deadline
+
+Do not assume a timezone incorrectly.
+
+Store dates/times appropriately and display them consistently.
+
+If deadline has passed:
+- Show "Expired".
+- Do not automatically delete.
+- Admin can still view/edit.
+
+============================================================
+37. DATA VALIDATION
+============================================================
+
+Client-side validation:
+- Required fields.
+- Valid URLs.
+- Valid email.
+- Valid phone.
+- Numeric ranges.
+- Date validity.
+
+Server/database constraints:
+- Foreign keys.
+- NOT NULL where required.
+- CHECK constraints for percentages and amounts.
+- Unique constraints where appropriate.
+
+Never rely only on JavaScript validation.
+
+============================================================
+38. DUPLICATE PREVENTION
+============================================================
+
+Prevent accidental duplicate applications.
+
+Before creating:
+Check whether the student already has an application for the same scholarship.
+
+If duplicate:
+Show:
+"This student already has an application for this scholarship."
+
+Options:
+- Open existing application
+- Cancel
+
+Admin may override only if there is a legitimate business reason.
+
+============================================================
+39. AUDIT LOGGING
+============================================================
+
+If audit logs are implemented, record:
+- Who performed the action
+- Action type
+- Entity
+- Entity ID
+- Timestamp
+- Safe summary of changes
+
+Never store:
+- passwords
+- auth tokens
+- share tokens
+- sensitive credentials
+
+Useful events:
+- Scholarship created
+- Scholarship updated
+- Scholarship deleted
+- Student created
+- Student updated
+- Application created
+- Status changed
+- Payment recorded
+- Share link created
+- Share link revoked
+
+============================================================
+40. EMPTY STATES
+============================================================
+
+Every major list needs an empty state.
+
+Example:
+"No scholarships yet."
+"Create your first scholarship to start managing applications."
+
+Button:
+"+ Add Scholarship"
+
+Do not show a blank page.
+
+============================================================
+41. LOADING STATES
+============================================================
+
+Use:
+- Skeleton cards.
+- Skeleton table rows.
+- Button spinners.
+- Loading text.
+
+Do not freeze the UI.
+
+Avoid unnecessary full-page spinners.
+
+============================================================
+42. ERROR HANDLING
+============================================================
+
+Handle:
+- Network error
+- Supabase error
+- Unauthorized session
+- RLS denied
+- Missing record
+- Invalid token
+- Expired share link
+- Revoked share link
+- Invalid form
+- Duplicate application
+
+Shared page errors:
+- "This link is invalid."
+- "This link has expired."
+- "This link has been revoked."
+- "The requested information is unavailable."
+
+Do not expose SQL errors or stack traces.
+
+============================================================
+43. SHARE LINK SECURITY FLOW
+============================================================
+
+Recommended flow:
+
+Admin:
+1. Click Create Share Link.
+2. Choose expiration.
+3. Choose shareable fields.
+4. Backend generates secure random token.
+5. Backend stores token hash.
+6. UI receives the one-time/raw token only for constructing the link.
+7. Admin copies link.
+
+Student:
+1. Opens shared URL.
+2. Frontend sends token to secure Edge Function.
+3. Function hashes token.
+4. Looks up valid token.
+5. Checks expiry/revocation.
+6. Fetches safe fields.
+7. Returns only safe data.
+8. Updates last_accessed_at.
+
+Never:
+- Query students directly from anonymous frontend.
+- Use predictable tokens.
+- Return all columns.
+- Return credentials.
+
+============================================================
+44. IMPORTANT BUSINESS RULES
+============================================================
+
+1. One student can have many scholarship applications.
+2. One scholarship can have many students.
+3. A student can be manually assigned any scholarship.
+4. Smart filtering is a recommendation tool, not a final eligibility decision.
+5. Scholarship statuses are configurable per scholarship.
+6. Commission calculation must be automatic.
+7. Payment history must support multiple records.
+8. Share links are read-only.
+9. Share links must be revocable.
+10. Admin can regenerate a share link.
+11. Sensitive credentials must never appear in the shared page.
+12. Dashboard data must reflect database changes.
+13. Deleting data must be deliberate.
+14. Do not silently destroy related records.
+15. Use foreign-key behavior intentionally.
+
+============================================================
+45. SETTINGS PAGE
+============================================================
+
+Settings may contain:
+
+- Admin profile
+- Display preferences
+- Currency
+- Default commission %
+- Default application statuses
+- Share link default expiration
+- Default shared-view fields
+- System information
+
+Do not place unnecessary settings here.
+
+============================================================
+46. ACCESSIBILITY
+============================================================
+
+Use:
+- Semantic HTML.
+- Proper labels.
+- Keyboard navigation.
+- Focus states.
+- ARIA labels for icon buttons.
+- Sufficient contrast.
+- Accessible form errors.
+- Accessible dialogs.
+- Do not communicate information only through color.
+
+============================================================
+47. PERFORMANCE
+============================================================
+
+Optimize:
+- Database queries.
+- Pagination.
+- Image usage.
+- JavaScript bundle size.
+- DOM operations.
+
+Avoid:
+- Repeated database queries for the same information.
+- Unnecessary polling.
+- Rendering thousands of rows at once.
+- Duplicate event listeners.
+
+Use reusable functions.
+
+============================================================
+48. CODE QUALITY
+============================================================
+
+Rules:
+- No duplicate code.
+- No unused files.
+- No dead buttons.
+- No fake functionality.
+- No placeholder actions presented as finished features.
+- No hard-coded sample data in production logic.
+- Keep Supabase logic centralized.
+- Keep UI logic separated from data access.
+- Use meaningful variable/function names.
+- Handle errors consistently.
+- Comment only where the code needs explanation.
+
+============================================================
+49. SUPABASE SQL DELIVERABLES
+============================================================
+
+Generate:
+
+supabase/schema.sql
+- extensions if required
+- tables
+- indexes
+- constraints
+- foreign keys
+- timestamps
+- triggers if needed
+
+supabase/rls.sql
+- enable RLS
+- admin policies
+- safe policies/functions for required access
+
+supabase/seed.sql
+- optional sample scholarship statuses
+- no fake personal student data
+
+If Edge Functions are required:
+supabase/functions/create-share-token/
+and/or
+supabase/functions/get-shared-student/
+
+Provide deployment instructions.
+
+============================================================
+50. INDEXES
+============================================================
+
+Create useful indexes for:
+- students.full_name
+- students.student_code
+- students.email
+- scholarships.name
+- scholarships.deadline_date
+- applications.student_id
+- applications.scholarship_id
+- applications.status_id
+- applications.application_date
+- payments.application_id
+- share_tokens.token_hash
+
+Use appropriate indexes based on actual query patterns.
+
+============================================================
+51. DELETE RULES
+============================================================
+
+Before deletion:
+- Check related applications/payments.
+- Warn admin.
+- Prefer archive/deactivate for important records.
+- Avoid accidental cascading deletion of financial records.
+
+For scholarships:
+Prefer "Inactive" rather than deleting historical scholarship data.
+
+For students:
+Do not permanently delete if financial/application history must be preserved without explicit confirmation.
+
+============================================================
+52. IMPORT / EXPORT
+============================================================
+
+Optional but recommended:
+
+Export:
+- Students CSV
+- Applications CSV
+- Payments CSV
+- Scholarships CSV
+
+Import:
+- Students CSV
+- Validate before insertion.
+- Show preview.
+- Show errors by row.
+- Do not partially import silently.
+
+If implementing import/export, keep it simple.
+
+============================================================
+53. PRINT VIEW
+============================================================
+
+Shared student page should support browser print.
+
+Print view:
+- Hide navigation.
+- Hide buttons.
+- Clean typography.
+- Show student and application details.
+- Avoid cutting content between pages where possible.
+
+============================================================
+54. UI COMPONENT SYSTEM
+============================================================
+
+Build reusable components:
+
+- Sidebar
+- Header
+- Button
+- IconButton
+- Input
+- Select
+- Textarea
+- DateInput
+- CurrencyInput
+- SearchBox
+- FilterPanel
+- Card
+- StatCard
+- Table
+- StatusBadge
+- Modal
+- ConfirmDialog
+- Toast
+- EmptyState
+- Skeleton
+- Pagination
+- Dropdown
+- Tabs
+- ShareLinkBox
+- ChartCard
+
+============================================================
+55. ICONS
+============================================================
+
+Use one consistent icon set.
+
+Do not mix random icon styles.
+
+Icon-only controls must have:
+- aria-label
+- tooltip/title where appropriate
+
+============================================================
+56. SAMPLE APPLICATION FLOW
+============================================================
+
+FLOW A — CREATE SCHOLARSHIP
+
+Admin logs in
+→ Dashboard
+→ Scholarships
+→ Add Scholarship
+→ Enter details
+→ Add eligibility rules
+→ Add required documents
+→ Configure statuses
+→ Save
+→ Success toast
+→ Scholarship appears in list
+→ Dashboard statistics update
+
+FLOW B — CREATE STUDENT
+
+Students
+→ Add Student
+→ Enter profile
+→ Enter academic information
+→ Enter eligibility information
+→ Save
+→ Student profile opens
+
+FLOW C — FIND SCHOLARSHIPS
+
+Student profile
+→ Find Eligible Scholarships
+→ Smart matching
+→ Results:
+   Likely Eligible
+   Possibly Eligible
+   Not Eligible
+→ Admin reviews
+→ Assign Scholarship
+
+FLOW D — APPLICATION
+
+Student profile
+→ Add Application
+→ Select scholarship
+→ Enter application ID
+→ Enter portal URL
+→ Enter portal user ID
+→ Handle credentials securely if required
+→ Select status
+→ Enter application date
+→ Enter benefit amount
+→ Enter commission %
+→ Commission auto-calculates
+→ Save
+
+FLOW E — PAYMENT
+
+Application
+→ Record Payment
+→ Enter amount
+→ Payment date
+→ Method
+→ Reference
+→ Status
+→ Save
+→ Payment totals update
+
+FLOW F — SHARE
+
+Student profile
+→ Share
+→ Select fields
+→ Select expiration
+→ Create link
+→ Copy
+→ Student opens link
+→ Read-only page appears
+
+============================================================
+57. DASHBOARD CALCULATION RULES
+============================================================
+
+Total Students:
+COUNT students
+
+Total Scholarships:
+COUNT active/total according to selected definition
+
+Total Applications:
+COUNT applications
+
+Active Applications:
+Applications whose status is not terminal/rejected according to configured logic.
+
+Approved:
+Applications with configured approved status.
+
+Total Benefit:
+SUM application benefit_amount where appropriate.
+
+Total Commission:
+SUM commission_amount.
+
+Pending Payments:
+Expected amount minus recorded paid amounts, based on clearly defined payment/business rules.
+
+Do not double-count payments.
+
+============================================================
+58. COMMISSION EXAMPLE
+============================================================
+
+Benefit amount: ₹12,000
+Commission: 40%
+
+Commission:
+₹12,000 × 40 ÷ 100 = ₹4,800
+
+Net:
+₹12,000 − ₹4,800 = ₹7,200
+
+UI should show:
+
+Benefit Amount
+₹12,000
+
+Commission
+40%
+
+Your Commission
+₹4,800
+
+Net Amount
+₹7,200
+
+The exact wording can be changed in settings/UI, but calculations must be correct.
+
+============================================================
+59. APPLICATION DETAIL UI
+============================================================
+
+Use a clean two-column desktop layout.
+
+Left:
+- Student
+- Scholarship
+- Application information
+- Status
+
+Right:
+- Financial summary
+- Commission
+- Payment summary
+
+Below:
+- Status history
+- Payment history
+- Notes
+- Important links
+
+Mobile:
+Stack all sections vertically.
+
+============================================================
+60. SECURITY CHECKLIST
+============================================================
+
+Before delivery verify:
+
+[ ] No service-role key in frontend.
+[ ] No passwords in logs.
+[ ] No credentials in shared view.
+[ ] RLS enabled.
+[ ] Admin authorization checked server-side/database-side.
+[ ] Share tokens are random.
+[ ] Share tokens are hashed at rest where possible.
+[ ] Expired tokens rejected.
+[ ] Revoked tokens rejected.
+[ ] Public endpoint returns only allowed fields.
+[ ] SQL injection avoided through Supabase client/query APIs.
+[ ] XSS protected when rendering user content.
+[ ] External URLs validated.
+[ ] Sensitive data minimized.
+
+============================================================
+61. TESTING CHECKLIST
+============================================================
+
+Authentication:
+[ ] Correct login works.
+[ ] Wrong password shows clear error.
+[ ] Logout works.
+[ ] Expired session redirects.
+
+Scholarships:
+[ ] Create.
+[ ] Read.
+[ ] Edit.
+[ ] Deactivate.
+[ ] Delete where allowed.
+[ ] Search.
+[ ] Filter.
+[ ] Sort.
+[ ] Deadline status.
+
+Students:
+[ ] Create.
+[ ] Read.
+[ ] Edit.
+[ ] Delete/archive.
+[ ] Search.
+[ ] Filter.
+
+Applications:
+[ ] Create.
+[ ] Prevent accidental duplicate.
+[ ] Edit.
+[ ] Status changes.
+[ ] Status history.
+[ ] Commission calculation.
+
+Payments:
+[ ] Record.
+[ ] Edit.
+[ ] Delete.
+[ ] Multiple payments.
+[ ] Correct totals.
+
+Share:
+[ ] Create token.
+[ ] Copy link.
+[ ] Open shared page.
+[ ] Expiry.
+[ ] Revocation.
+[ ] Regeneration.
+[ ] No private data exposed.
+
+Responsive:
+[ ] 320px.
+[ ] 375px.
+[ ] 390px.
+[ ] 430px.
+[ ] 768px.
+[ ] 1024px.
+[ ] 1280px.
+[ ] 1440px.
+[ ] No horizontal overflow.
+[ ] No overlapping modal.
+[ ] Buttons remain usable.
+
+============================================================
+62. FINAL UI QUALITY CHECK
+============================================================
+
+Before declaring the project complete:
+
+1. Test every button.
+2. Test every form.
+3. Test every CRUD operation.
+4. Test every link.
+5. Test every modal.
+6. Test all loading states.
+7. Test all error states.
+8. Test mobile navigation.
+9. Test desktop navigation.
+10. Test database RLS.
+11. Test shared-link security.
+12. Test commission calculation.
+13. Test payment calculations.
+14. Test dashboard refresh.
+15. Check browser console for errors.
+16. Remove unused code.
+17. Remove duplicate code.
+18. Remove placeholder text.
+19. Remove fake buttons.
+20. Confirm there are no broken routes.
+
+============================================================
+63. REQUIRED DELIVERABLE
+============================================================
+
+The coding AI must deliver a COMPLETE WORKING PROJECT, not a design mockup.
+
+Required:
+- All HTML files.
+- All CSS files.
+- All JavaScript files.
+- Supabase SQL schema.
+- RLS policies.
+- Edge Function(s), if required.
+- README.md.
+- SETUP.md.
+- Clear Supabase configuration instructions.
+- Clear deployment instructions.
+
+The application must be connected to Supabase after configuration.
+
+Do not create fake API calls.
+
+Do not use localStorage as a replacement for the database.
+
+Do not use hard-coded arrays as a replacement for Supabase data.
+
+============================================================
+64. SUPABASE CONFIGURATION
+============================================================
+
+Create a config file such as:
+
+assets/js/config.js
+
+It should contain placeholders for:
+
+SUPABASE_URL
+SUPABASE_ANON_KEY
+
+Example structure only:
+
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+Do not include real credentials in generated source unless supplied by the project owner.
+
+============================================================
+65. SETUP DOCUMENTATION
+============================================================
+
+SETUP.md must explain:
+
+1. Create Supabase project.
+2. Open SQL Editor.
+3. Run schema.sql.
+4. Run RLS policies.
+5. Create first admin user.
+6. Create profile row if required.
+7. Configure frontend Supabase URL and anon key.
+8. Deploy frontend.
+9. Deploy Edge Function(s).
+10. Configure Edge Function secrets if required.
+11. Test login.
+12. Create scholarship.
+13. Create student.
+14. Create application.
+15. Test share link.
+16. Test RLS/security.
+
+============================================================
+66. IMPORTANT: DO NOT OVER-ENGINEER
+============================================================
+
+Keep the system simple.
+
+Do NOT add:
+- student account system
+- unnecessary roles
+- complicated CRM features
+- unnecessary messaging
+- unnecessary notifications
+- complicated workflow engines
+- unnecessary microservices
+- unnecessary libraries
+
+The system's core job is:
+
+Scholarships
+→ Students
+→ Smart eligibility matching
+→ Applications
+→ Status tracking
+→ Commission
+→ Payments
+→ Shareable student view
+→ Dashboard
+
+Everything should support this workflow.
+
+============================================================
+67. IMPLEMENTATION INSTRUCTIONS TO THE CODING AI
+============================================================
+
+You are the lead frontend + backend engineer.
+
+Do not only provide an explanation.
+
+Build the actual project.
+
+Work in this order:
+
+PHASE 1:
+Audit requirements and create project structure.
+
+PHASE 2:
+Create database schema.
+
+PHASE 3:
+Create RLS/security policies.
+
+PHASE 4:
+Create authentication.
+
+PHASE 5:
+Build global layout and responsive design system.
+
+PHASE 6:
+Build dashboard.
+
+PHASE 7:
+Build scholarship management.
+
+PHASE 8:
+Build student management.
+
+PHASE 9:
+Build smart eligibility matching.
+
+PHASE 10:
+Build applications.
+
+PHASE 11:
+Build commission calculations.
+
+PHASE 12:
+Build payment management.
+
+PHASE 13:
+Build important links.
+
+PHASE 14:
+Build secure share-link system.
+
+PHASE 15:
+Build settings.
+
+PHASE 16:
+Test all workflows.
+
+PHASE 17:
+Fix all console/database/UI errors.
+
+PHASE 18:
+Perform responsive testing.
+
+PHASE 19:
+Perform security/RLS testing.
+
+PHASE 20:
+Provide final setup documentation.
+
+============================================================
+68. NON-NEGOTIABLE RULES
+============================================================
+
+1. Use HTML + CSS + Vanilla JS.
+2. Use Supabase as backend.
+3. Admin-only authenticated dashboard.
+4. No student login.
+5. Students use secure share links.
+6. Build real CRUD.
+7. Build configurable scholarship statuses.
+8. Build smart eligibility filtering.
+9. Always allow manual scholarship assignment.
+10. Build commission auto-calculation.
+11. Build payment records.
+12. Build dashboard statistics.
+13. Build responsive UI.
+14. No horizontal overflow.
+15. No dead buttons.
+16. No fake data replacing database functionality.
+17. No exposed service-role key.
+18. Protect database with RLS.
+19. Protect public share endpoint.
+20. Never expose credentials through the shared page.
+21. Keep the UI simple and professional.
+22. Remove duplicate code.
+23. Test every feature before declaring completion.
+
+============================================================
+69. DEFINITION OF DONE
+============================================================
+
+The project is considered DONE only when:
+
+- Admin can log in.
+- Admin can create unlimited practical scholarship records.
+- Admin can configure scholarship eligibility.
+- Admin can configure application statuses.
+- Admin can create student records.
+- Admin can search/filter students.
+- Admin can smart-match scholarships to students.
+- Admin can manually assign scholarships.
+- Admin can create and manage applications.
+- Application status can be changed.
+- Application status is visible.
+- Benefit amount is stored.
+- Commission percentage works.
+- Commission amount calculates correctly.
+- Payment records work.
+- Dashboard statistics work.
+- Pie chart works.
+- Important links work.
+- Secure share link works.
+- Share link can expire/revoke.
+- Shared page is read-only.
+- Shared page does not expose sensitive information.
+- RLS works.
+- No service-role key is exposed.
+- UI is responsive on all target devices.
+- No major console errors remain.
+- No dead buttons remain.
+- Documentation is complete.
+
+============================================================
+70. FINAL INSTRUCTION
+============================================================
+
+Build SMS as a polished, practical scholarship management system.
+
+Prioritize:
+SECURITY
+RELIABILITY
+RESPONSIVENESS
+SIMPLICITY
+REAL FUNCTIONALITY
+CLEAN UI
+MAINTAINABLE CODE
+
+Do not stop at a visual prototype.
+
+Every visible action must either work or be intentionally disabled with a clear reason.
+
+Do not claim a feature is complete until it has been implemented and tested.
+
+If a requirement conflicts with security best practices, choose the secure implementation and clearly document the change.
+
+Generate the project files, Supabase SQL, RLS, secure share mechanism, responsive UI, setup documentation, and testing checklist as part of the final deliverable.
